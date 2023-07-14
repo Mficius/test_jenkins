@@ -18,20 +18,24 @@ pipeline {
         }
 
         stage('Build') {
-            steps {
-                sh 'exit 1'
+            agent {
+                node{
+                    label "DockerServer";
+                }
             }
-        }
-
-        stage('Delivery') {
             steps {
-                sh 'exit 1'
+                sh 'docker build https://github.com/Mficius/test_jenkins.git -t test_jenkins:latest'
             }
         }
 
         stage('Deploy')  {
+            agent {
+                node{
+                    label "DockerServer";
+                }
+            }
             steps {
-                sh 'exit 1'
+                sh 'docker run -tdi -p 5000:5000 test_jenkins:latest'
             }
         }
             
